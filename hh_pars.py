@@ -2,8 +2,9 @@ import requests
 from fake_headers import Headers
 from pprint import pprint
 from bs4 import BeautifulSoup
+import json
 
-parsed_data = []
+parsed_data = {}
 def get_headers():
     return Headers(browser='firefox', os='win').generate()
 
@@ -19,11 +20,9 @@ hh_main_soup = BeautifulSoup(vacansies, 'lxml')
 tag_all_vacansies = hh_main_soup.find('div', class_="HH-MainContent HH-Supernova-MainContent")
 vacancy_tag = tag_all_vacansies.find_all('div', class_="vacancy-serp-item-body__main-info")
 
+count = 0
 for vacancy in vacancy_tag:
     link = vacancy.find('a')['href']
-    # tag_h3 = vacancy[3].find('h3')
-    # tag_a = tag_h3.find('tag_a')
-    # link = tag_a['href']
     vacancy_page = BeautifulSoup(requests.get(link, headers=get_headers()).text, 'lxml')
     vacancy_description = vacancy_page.find('div', class_="vacancy-description").text
 
@@ -31,13 +30,13 @@ for vacancy in vacancy_tag:
         salary = vacancy_page.find('div', class_="vacancy-title").find_all('div')[1].text
         company = vacancy_page.find('span', class_="vacancy-company-name").text
         city = vacancy_page.find('span', {'data-qa': 'vacancy-view-raw-address'}).contents[0]
-        parsed_data.append(
-            {
+        parsed_data[count] = {
                 'link': link,
                 'company': company,
                 'city': city,
                 'salary': salary
             }
-        )
+    count += 1
 
-pprint(parsed_data)
+with open('vacansies.json', 'w') as file:
+    json.dump(parsed_data, file)

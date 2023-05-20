@@ -11,3 +11,4 @@ test_html.html
 .idea/
 Lib/
 Scripts/
+*.json
