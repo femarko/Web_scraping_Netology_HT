@@ -1,14 +1,6 @@
-test.py
-habr_pars.py
-ip_pars.py
-lector_habr.py
-lector_iplocation.py
-lector_myip.py
-lector_selen.py
-pyvenv.cfg
-test.py
-test_html.html
 .idea/
 Lib/
 Scripts/
 *.json
+web_scrap/
+test_debug.py
